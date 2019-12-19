@@ -1,9 +1,38 @@
 import React from 'react';
-import { View, TextInput, Button, Text } from 'react-native';
-import './App.css';
-import {
-  LineChart, Dimensions
-} from "react-native-chart-kit";
+import { StyleSheet, View, TextInput, Button, Text, Dimensions } from 'react-native';
+import { LineChart } from "react-native-chart-kit";
+
+const styles = StyleSheet.create({
+  searchBar: {
+    position: 'relative',
+    display: 'flex',
+    paddingTop: 0,
+    paddingBottom: 0,
+    paddingLeft: 5,
+    paddingRight: 5,
+    marginTop: 50,
+    marginBottom: 50,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '80%',
+  },
+  chart: {
+    marginLeft: 'auto',
+    marginRight: 'auto'
+  }, 
+  App: {
+    backgroundColor: 'rgb(25,25,25)',
+  },
+  h1: {
+    color: '#fff',
+    fontSize: 18
+  },
+  input: {
+    marginTop: 10,
+    marginBottom: 10,
+    color: '#fff'
+  }
+});
 
 export default class App extends React.Component {
   constructor(props) {
@@ -46,6 +75,7 @@ export default class App extends React.Component {
         }
       })
       .catch((error) => {
+        console.log(error);
         this.setState({searchError: true, errorMessage: 'Fetching data failed!'});
       });
   }
@@ -60,11 +90,13 @@ export default class App extends React.Component {
       );
     }
 
+    const screenWidth = ((Dimensions.get("window").width)*0.8);
+
     let chartTemperatures = null;
     // als er data beschikbaar is wordt deze getoond
     if(this.state.temperatures.length > 0) {
       chartTemperatures = (
-        <View>
+        <View style={styles.chart}>
           <LineChart
             data={{
               labels: ["1", "2", "3", "4", "5"],
@@ -74,15 +106,12 @@ export default class App extends React.Component {
                 }
               ]
             }}
-            width={400} // from react-native
+            width={screenWidth} // from react-native
             height={220}
-            yAxisLabel={"T "}
             yAxisSuffix={" °C"}
             chartConfig={{
-              backgroundColor: "#e26a00",
-              backgroundGradientFrom: "#fb8c00",
-              backgroundGradientTo: "#ffa726",
-              decimalPlaces: 2, // optional, defaults to 2dp
+              backgroundColor: "#3E517A",
+              decimalPlaces: 1, // optional, defaults to 2dp
               color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
               style: {
@@ -106,20 +135,21 @@ export default class App extends React.Component {
 
 
     return (
-        <View>
-          <div className="search-bar">
+        <View style={styles.App}>
+          <View style={styles.searchBar}>
+            <Text style={styles.h1} h1>Search the weather</Text>
             <TextInput
-              className="search-input"
-              onChangeText={(e) => this.onChangeText(event.target.value)}
+              style={styles.input}
+              onChangeText={text => this.onChangeText(text)}
               value={this.state.searchQuery}
-              placeholder="Search a city for it's weather forecast"
+              placeholder="type a city for it's weather forecast"
             />
             <Button 
-              className="search-button"
               title="Search"
               onPress={() => this.searchWeather()}
             />
-          </div>
+          </View>
+
           {errorMessage}
           {chartTemperatures}
       </View>
