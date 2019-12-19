@@ -36,3 +36,9 @@
     text-transform: uppercase;
     font-size: 18px;
 }
+
+.error-message {
+    padding: 10px 15px;
+    color: #fff;
+    background-color: crimson;
+}

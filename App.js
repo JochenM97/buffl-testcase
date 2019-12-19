@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { View, TextInput, Button, Text } from 'react-native';
 import './App.css';
 import {
@@ -17,10 +17,13 @@ export default class App extends React.Component {
     }
   }
 
+  // search bar value
   onChangeText = (searchQuery) => {
     this.setState({searchQuery: searchQuery});
   }
 
+
+  // weather data fetching
   searchWeather = () => {
     //const api_key = 'a81adc80c1edf7dca92cf21d5c6efcbb';
     const api_key = "410463b3935acea56c8171825dbb4440"; // tijdelijke key want mijn eigen key was nog niet geactiveerd
@@ -44,7 +47,6 @@ export default class App extends React.Component {
       })
       .catch((error) => {
         this.setState({searchError: true, errorMessage: 'Fetching data failed!'});
-        console.log(error)
       });
   }
 
@@ -52,15 +54,14 @@ export default class App extends React.Component {
     let errorMessage = null;
     if(this.state.searchError == true) {
       errorMessage = (
-        <Text>
+        <Text className="error-message">
           {this.state.errorMessage}
         </Text>
       );
     }
 
-    let temperatures = null;
     let chartTemperatures = null;
-
+    // als er data beschikbaar is wordt deze getoond
     if(this.state.temperatures.length > 0) {
       chartTemperatures = (
         <View>
